@@ -7,16 +7,17 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CustomerInfoDto {
+public class EmployeeInfoDto {
 
-    private String custId;
-    private String title;
+    private String employeeId;
     private String name;
+    private String nit;
     private String dob;
+    private String position;
     private double salary;
+    private String contactNumber;
     private String address;
-    private String city;
-    private String province;
-    private String postalCode;
+    private String joinedDate;
+    private String status;
 
 }

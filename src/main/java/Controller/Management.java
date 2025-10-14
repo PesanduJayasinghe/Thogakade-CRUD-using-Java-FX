@@ -40,7 +40,12 @@ public class Management {
         stage.show();
     }
 
+    @FXML
+    void btnLogOut(ActionEvent event) throws IOException {
+        stage.close();
 
-
-
+        Stage stage2=new Stage();
+        stage2.setScene(new Scene(FXMLLoader.load(getClass().getResource("/View/login_form.fxml"))));
+        stage2.show();
+    }
 }
