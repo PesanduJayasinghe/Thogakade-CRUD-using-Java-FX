@@ -22,19 +22,34 @@ public class Employee {
     );
 
     @FXML
-    private Button btnCustomerManage;
+    void btnAdd(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnDelete;
+    void btnCustomerManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnItemManage;
+    void btnDelete(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnSupplierManage;
+    void btnItemManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnUpdate;
+    void btnSupplierManage(ActionEvent event) {
+
+    }
+
+    @FXML
+    void btnUpdate(ActionEvent event) {
+
+    }
 
     @FXML
     private TableColumn<?, ?> col_DOB;
@@ -99,9 +114,5 @@ public class Employee {
     @FXML
     private TextField txtStatus;
 
-    @FXML
-    void btnAdd(ActionEvent event) {
-
-    }
 
 }

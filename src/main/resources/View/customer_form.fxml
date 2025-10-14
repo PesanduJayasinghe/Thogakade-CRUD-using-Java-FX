@@ -39,11 +39,11 @@
       <TextField fx:id="txtCity" layoutX="470.0" layoutY="469.0" prefHeight="26.0" prefWidth="123.0" promptText="City" />
       <TextField fx:id="txtPostalCode" layoutX="776.0" layoutY="469.0" prefHeight="26.0" prefWidth="114.0" promptText="Postal Code" />
       <ChoiceBox fx:id="txtProvince" layoutX="614.0" layoutY="469.0" prefHeight="26.0" prefWidth="146.0" />
-      <Button fx:id="btnAdd" layoutX="20.0" layoutY="515.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="ADD" />
-      <Button fx:id="btnUpdate" layoutX="131.0" layoutY="515.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="UPDATE" />
-      <Button fx:id="btnDelete" layoutX="249.0" layoutY="515.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="DELETE" />
-      <Button fx:id="btnItemManage" layoutX="457.0" layoutY="515.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="114.0" text="Item Management" />
-      <Button fx:id="btnSupplierManage" layoutX="587.0" layoutY="515.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="138.0" text="Supplier Management" />
-      <Button fx:id="btnEmployeeManage" layoutX="743.0" layoutY="515.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="146.0" text="Employee Management" />
+      <Button layoutX="20.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnAdd" prefHeight="26.0" prefWidth="91.0" text="ADD" />
+      <Button layoutX="131.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnUpdate" prefHeight="26.0" prefWidth="91.0" text="UPDATE" />
+      <Button fx:id="btnDelete" layoutX="249.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnUpdate" prefHeight="26.0" prefWidth="91.0" text="DELETE" />
+      <Button layoutX="457.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnItemManage" prefHeight="26.0" prefWidth="114.0" text="Item Management" />
+      <Button layoutX="587.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnSupplierManage" prefHeight="26.0" prefWidth="138.0" text="Supplier Management" />
+      <Button layoutX="743.0" layoutY="515.0" mnemonicParsing="false" onAction="#btnEmployeeManage" prefHeight="26.0" prefWidth="146.0" text="Employee Management" />
    </children>
 </AnchorPane>

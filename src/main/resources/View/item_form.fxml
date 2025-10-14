@@ -14,12 +14,12 @@
         
 
 
-        <Button fx:id="btnAdd" layoutX="35.0" layoutY="469.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="ADD" />
-        <Button fx:id="btnUpdate" layoutX="137.0" layoutY="469.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="UPDATE" />
-        <Button fx:id="btnDelete" layoutX="235.0" layoutY="469.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="91.0" text="DELETE" />
-        <Button fx:id="btnCustomerManage" layoutX="422.0" layoutY="469.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="146.0" text="Customer Management" />
-        <Button fx:id="btnSupplierManage" layoutX="576.0" layoutY="469.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="138.0" text="Supplier Management" />
-        <Button fx:id="btnEmployeeManage" layoutX="722.0" layoutY="469.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="146.0" text="Employee Management" />
+        <Button layoutX="35.0" layoutY="469.0" mnemonicParsing="false" onAction="#btnAdd" prefHeight="26.0" prefWidth="91.0" text="ADD" />
+        <Button layoutX="137.0" layoutY="469.0" mnemonicParsing="false" onAction="#btnUpdate" prefHeight="26.0" prefWidth="91.0" text="UPDATE" />
+        <Button layoutX="235.0" layoutY="469.0" mnemonicParsing="false" onAction="#btnDelete" prefHeight="26.0" prefWidth="91.0" text="DELETE" />
+        <Button layoutX="422.0" layoutY="469.0" mnemonicParsing="false" onAction="#btnCustomerManage" prefHeight="26.0" prefWidth="146.0" text="Customer Management" />
+        <Button layoutX="576.0" layoutY="469.0" mnemonicParsing="false" onAction="#btnSupplierManage" prefHeight="26.0" prefWidth="138.0" text="Supplier Management" />
+        <Button layoutX="722.0" layoutY="469.0" mnemonicParsing="false" onAction="#btnEmployeeManage" prefHeight="26.0" prefWidth="146.0" text="Employee Management" />
       <Label layoutX="385.0" layoutY="26.0" text="Item Form">
          <font>
             <Font size="23.0" />

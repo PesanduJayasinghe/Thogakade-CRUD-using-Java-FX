@@ -9,6 +9,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import java.awt.event.ActionEvent;
+
 public class Item {
 
     ObservableList<ItemInfoDto> itemInfoArray=FXCollections.observableArrayList(
@@ -20,22 +22,34 @@ public class Item {
     );
 
     @FXML
-    private Button btnAdd;
+    void btnAdd(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnCustomerManage;
+    void btnCustomerManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnDelete;
+    void btnDelete(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnEmployeeManage;
+    void btnEmployeeManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnSupplierManage;
+    void btnSupplierManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnUpdate;
+    void btnUpdate(ActionEvent event) {
+
+    }
 
     @FXML
     private TableColumn<?, ?> col_category;

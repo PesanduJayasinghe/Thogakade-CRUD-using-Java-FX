@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,19 +22,35 @@ public class Supplier {
     );
 
     @FXML
-    private Button btnCustomerManage;
+    void btnAdd(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnDelete;
+    void btnCustomerManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnEmployeeManage;
+    void btnDelete(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnItemManage;
+    void btnEmployeeManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnUpdate;
+    void btnItemManage(ActionEvent event) {
+
+    }
+
+    @FXML
+    void btnUpdate(ActionEvent event) {
+
+    }
+
 
     @FXML
     private TableColumn<?, ?> col_address;
@@ -91,9 +106,6 @@ public class Supplier {
     @FXML
     private TextField txtSupId;
 
-    @FXML
-    void btnAdd(ActionEvent event) {
 
-    }
 
 }

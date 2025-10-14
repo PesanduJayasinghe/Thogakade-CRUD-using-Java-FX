@@ -11,6 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import java.awt.event.ActionEvent;
+
 public class Customer {
 
     ObservableList<CustomerInfoDto> customerInfoArray= FXCollections.observableArrayList(
@@ -22,22 +24,29 @@ public class Customer {
     );
 
     @FXML
-    private Button btnAdd;
+    void btnAdd(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnDelete;
+    void btnEmployeeManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnEmployeeManage;
+    void btnItemManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnItemManage;
+    void btnSupplierManage(ActionEvent event) {
+
+    }
 
     @FXML
-    private Button btnSupplierManage;
+    void btnUpdate(ActionEvent event) {
 
-    @FXML
-    private Button btnUpdate;
+    }
 
     @FXML
     private TableColumn<?, ?> col_address;
