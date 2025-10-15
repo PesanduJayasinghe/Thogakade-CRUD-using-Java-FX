@@ -23,7 +23,19 @@ public class Employee {
 
     @FXML
     void btnAdd(ActionEvent event) {
+        String employeeId=txtEmpId.getText();
+        String name=txtName.getText();
+        String nic=txtNic.getText();
+        String dob=txtDOB.getValue().toString();
+        String position=txtPosition.getText();
+        double salary= Double.parseDouble(txtSalary.getText());
+        String contactNumber=txtContactNo.getText();
+        String address=txtAddress.getText();
+        String joinedDate=txtJoinedDate.getValue().toString();
+        String status=txtStatus.getText();
 
+        EmployeeInfoDto employeeInfo=new EmployeeInfoDto(employeeId,name,nic,dob,position,salary,contactNumber,address,joinedDate,status);
+        employeeInfoArray.add(employeeInfo);
     }
 
     @FXML

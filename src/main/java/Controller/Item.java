@@ -23,6 +23,14 @@ public class Item {
 
     @FXML
     void btnAdd(ActionEvent event) {
+        String itemCode=txtItemCode.getText();
+        String description=txtDescription.getText();
+        String category=txtCategory.getText();
+        int qtyOnHand= Integer.parseInt(txtQtyOnHand.getText());
+        double unitPrice= Double.parseDouble(txtUnitPrice.getText());
+
+        ItemInfoDto itemInfo=new ItemInfoDto(itemCode,description,category,qtyOnHand,unitPrice);
+        itemInfoArray.add(itemInfo);
 
     }
 

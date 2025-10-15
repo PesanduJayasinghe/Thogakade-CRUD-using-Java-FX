@@ -4,14 +4,12 @@ import Model.DTO.CustomerInfoDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
 
 public class Customer {
 
@@ -25,6 +23,19 @@ public class Customer {
 
     @FXML
     void btnAdd(ActionEvent event) {
+        String custId=txtCustId.getText();
+        String title=txtTitle.getText();
+        String name=txtName.getText();
+        String dob=txtDOB.getValue().toString();
+        double salary= Double.parseDouble(txtSalary.getText());
+        String address=txtAddress.getText();
+        String city=txtCity.getText();
+        String province= (String) txtProvince.getValue();
+        String postalCode=txtPostalCode.getText();
+
+        CustomerInfoDto customerInfo=new CustomerInfoDto(custId,title,name,dob,salary,address,city,province,postalCode);
+        customerInfoArray.add(customerInfo);
+
 
     }
 
@@ -97,7 +108,25 @@ public class Customer {
     private TextField txtPostalCode;
 
     @FXML
-    private ChoiceBox<?> txtProvince;
+    private ChoiceBox<String> txtProvince;
+
+    @FXML
+    public void initialize() {
+        txtProvince.getItems().addAll(
+                "Central",
+                "Eastern",
+                "Northern",
+                "North Central",
+                "North Western",
+                "Sabaragamuwa",
+                "Southern",
+                "Uva",
+                "Western"
+        );
+
+        // Optional: set default value
+        txtProvince.setValue("Western");
+    }
 
     @FXML
     private TextField txtSalary;

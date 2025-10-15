@@ -5,10 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 public class Supplier {
 
@@ -23,7 +20,18 @@ public class Supplier {
 
     @FXML
     void btnAdd(ActionEvent event) {
+        String supplierId=txtSupId.getText();
+        String name=txtName.getText();
+        String companyName=txtCompanyName.getText();
+        String address=txtAddress.getText();
+        String city=txtCity.getText();
+        String province=txtProvince.getValue();
+        String postalCode=txtPostalCode.getText();
+        String phone=txtAddress.getText();
+        String email=txtEMail.getText();
 
+        SupplierInfoDto supplierInfo=new SupplierInfoDto(supplierId,name,companyName,address,city,province,postalCode,phone,email);
+        supplierInfoArray.add(supplierInfo);
     }
 
     @FXML
@@ -101,7 +109,25 @@ public class Supplier {
     private TextField txtPostalCode;
 
     @FXML
-    private ComboBox<?> txtProvince;
+    private ChoiceBox<String> txtProvince;
+
+    @FXML
+    public void initialize() {
+        txtProvince.getItems().addAll(
+                "Central",
+                "Eastern",
+                "Northern",
+                "North Central",
+                "North Western",
+                "Sabaragamuwa",
+                "Southern",
+                "Uva",
+                "Western"
+        );
+
+        // Optional: set default value
+        txtProvince.setValue("Western");
+    }
 
     @FXML
     private TextField txtSupId;
