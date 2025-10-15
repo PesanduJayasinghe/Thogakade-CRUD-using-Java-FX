@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.DTO.CustomerInfoDto;
 import Model.DTO.SupplierInfoDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +28,7 @@ public class Supplier {
         String city=txtCity.getText();
         String province=txtProvince.getValue();
         String postalCode=txtPostalCode.getText();
-        String phone=txtAddress.getText();
+        String phone=txtPhone.getText();
         String email=txtEMail.getText();
 
         SupplierInfoDto supplierInfo=new SupplierInfoDto(supplierId,name,companyName,address,city,province,postalCode,phone,email);
@@ -41,7 +42,9 @@ public class Supplier {
 
     @FXML
     void btnDelete(ActionEvent event) {
-
+        SupplierInfoDto selectedInfo=tblSupplier.getSelectionModel().getSelectedItem();
+        supplierInfoArray.remove(selectedInfo);
+        tblSupplier.refresh();
     }
 
     @FXML
@@ -56,7 +59,19 @@ public class Supplier {
 
     @FXML
     void btnUpdate(ActionEvent event) {
+        SupplierInfoDto supplierInfo=tblSupplier.getSelectionModel().getSelectedItem();
 
+        supplierInfo.setSupplierId(txtSupId.getText());
+        supplierInfo.setName(txtName.getText());
+        supplierInfo.setAddress(txtAddress.getText());
+        supplierInfo.setCity(txtCity.getText());
+        supplierInfo.setEmail(txtEMail.getText());
+        supplierInfo.setPhone(txtPhone.getText());
+        supplierInfo.setCompanyName(txtCompanyName.getText());
+        supplierInfo.setPostalCode(txtPostalCode.getText());
+        supplierInfo.setProvince(txtProvince.getValue());
+
+        tblSupplier.refresh();
     }
 
 
@@ -88,7 +103,7 @@ public class Supplier {
     private TableColumn<?, ?> col_supplier_id;
 
     @FXML
-    private TableView<SupplierInfoDto> tblEmployee;
+    private TableView<SupplierInfoDto> tblSupplier;
 
     @FXML
     private TextField txtAddress;
@@ -107,6 +122,9 @@ public class Supplier {
 
     @FXML
     private TextField txtPostalCode;
+
+    @FXML
+    private TextField txtPhone;
 
     @FXML
     private ChoiceBox<String> txtProvince;

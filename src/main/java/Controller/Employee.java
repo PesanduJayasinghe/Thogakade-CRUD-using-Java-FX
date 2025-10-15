@@ -45,6 +45,9 @@ public class Employee {
 
     @FXML
     void btnDelete(ActionEvent event) {
+        EmployeeInfoDto selectedInfo=tblEmployee.getSelectionModel().getSelectedItem();
+        employeeInfoArray.remove(selectedInfo);
+        tblEmployee.refresh();
 
     }
 
@@ -60,7 +63,20 @@ public class Employee {
 
     @FXML
     void btnUpdate(ActionEvent event) {
+        EmployeeInfoDto employeeInfo=tblEmployee.getSelectionModel().getSelectedItem();
 
+        employeeInfo.setName(txtName.getText());
+        employeeInfo.setEmployeeId(txtEmpId.getText());
+        employeeInfo.setDob(txtDOB.getValue().toString());
+        employeeInfo.setNic(txtNic.getText());
+        employeeInfo.setAddress(txtAddress.getText());
+        employeeInfo.setSalary(Double.parseDouble(txtSalary.getText()));
+        employeeInfo.setStatus(txtStatus.getText());
+        employeeInfo.setPosition(txtPosition.getText());
+        employeeInfo.setJoinedDate(txtJoinedDate.getValue().toString());
+        employeeInfo.setContactNumber(txtContactNo.getText());
+
+        tblEmployee.refresh();
     }
 
     @FXML

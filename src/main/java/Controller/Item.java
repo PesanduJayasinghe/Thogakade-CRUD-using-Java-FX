@@ -41,7 +41,9 @@ public class Item {
 
     @FXML
     void btnDelete(ActionEvent event) {
-
+        ItemInfoDto selectedInfo=tblItem.getSelectionModel().getSelectedItem();
+        itemInfoArray.remove(selectedInfo);
+        tblItem.refresh();
     }
 
     @FXML
@@ -56,7 +58,15 @@ public class Item {
 
     @FXML
     void btnUpdate(ActionEvent event) {
+        ItemInfoDto itemInfo=tblItem.getSelectionModel().getSelectedItem();
 
+        itemInfo.setItemCode(txtItemCode.getText());
+        itemInfo.setCategory(txtCategory.getText());
+        itemInfo.setDescription(txtDescription.getText());
+        itemInfo.setUnitPrice(Double.parseDouble(txtUnitPrice.getText()));
+        itemInfo.setQtyOnHand(Integer.parseInt(txtQtyOnHand.getText()));
+
+        tblItem.refresh();
     }
 
     @FXML

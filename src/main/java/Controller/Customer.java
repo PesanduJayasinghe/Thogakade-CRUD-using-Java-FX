@@ -56,8 +56,28 @@ public class Customer {
 
     @FXML
     void btnUpdate(ActionEvent event) {
+        CustomerInfoDto customerInfo=tblCustomer.getSelectionModel().getSelectedItem();
 
+        customerInfo.setName(txtName.getText());
+        customerInfo.setAddress(txtAddress.getText());
+        customerInfo.setCity(txtCity.getText());
+        customerInfo.setDob(txtDOB.getValue().toString());
+        customerInfo.setSalary(Double.parseDouble(txtSalary.getText()));
+        customerInfo.setCustId(txtCustId.getText());
+        customerInfo.setProvince(txtProvince.getValue());
+        customerInfo.setTitle(txtTitle.getText());
+        customerInfo.setPostalCode(txtPostalCode.getText());
+
+        tblCustomer.refresh();
     }
+
+    @FXML
+    void btnDelete(ActionEvent event) {
+        CustomerInfoDto selectedInfo=tblCustomer.getSelectionModel().getSelectedItem();
+        customerInfoArray.remove(selectedInfo);
+        tblCustomer.refresh();
+    }
+
 
     @FXML
     private TableColumn<?, ?> col_address;

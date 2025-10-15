@@ -11,7 +11,7 @@ public class EmployeeInfoDto {
 
     private String employeeId;
     private String name;
-    private String nit;
+    private String nic;
     private String dob;
     private String position;
     private double salary;
