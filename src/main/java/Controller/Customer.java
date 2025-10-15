@@ -4,14 +4,19 @@ import Model.DTO.CustomerInfoDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
+import javafx.scene.control.cell.PropertyValueFactory;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
-public class Customer {
+public class Customer implements Initializable {
 
     ObservableList<CustomerInfoDto> customerInfoArray= FXCollections.observableArrayList(
             new CustomerInfoDto("C001", "Mr.", "John Smith", "1985-03-14", 65000.00, "123 Elm Street", "New York", "NY", "10001"),
@@ -35,8 +40,6 @@ public class Customer {
 
         CustomerInfoDto customerInfo=new CustomerInfoDto(custId,title,name,dob,salary,address,city,province,postalCode);
         customerInfoArray.add(customerInfo);
-
-
     }
 
     @FXML
@@ -131,7 +134,39 @@ public class Customer {
     private ChoiceBox<String> txtProvince;
 
     @FXML
-    public void initialize() {
+    private TextField txtSalary;
+
+    @FXML
+    private TextField txtTitle;
+
+    @Override @FXML
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        col_cust_id.setCellValueFactory(new PropertyValueFactory<>("custId"));
+        col_title.setCellValueFactory(new PropertyValueFactory<>("title"));
+        col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        col_dob.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        col_salary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        col_address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        col_city.setCellValueFactory(new PropertyValueFactory<>("city"));
+        col_province.setCellValueFactory(new PropertyValueFactory<>("province"));
+        col_postal_code.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+
+        tblCustomer.setItems(customerInfoArray);
+
+        tblCustomer.getSelectionModel().selectedItemProperty().addListener((observableValue, customerInfoDto, t1) -> {
+            if (t1 != null) {
+                txtCustId.setText(t1.getCustId());
+                txtTitle.setText(t1.getTitle());
+                txtName.setText(t1.getName());
+                txtDOB.setValue(LocalDate.parse(t1.getDob()));
+                txtSalary.setText(String.valueOf(t1.getSalary()));
+                txtAddress.setText(t1.getAddress());
+                txtCity.setText(t1.getCity());
+                txtProvince.setValue(t1.getProvince());
+            }
+
+        });
+
         txtProvince.getItems().addAll(
                 "Central",
                 "Eastern",
@@ -144,14 +179,7 @@ public class Customer {
                 "Western"
         );
 
-        // Optional: set default value
+        //default value
         txtProvince.setValue("Western");
     }
-
-    @FXML
-    private TextField txtSalary;
-
-    @FXML
-    private TextField txtTitle;
-
 }

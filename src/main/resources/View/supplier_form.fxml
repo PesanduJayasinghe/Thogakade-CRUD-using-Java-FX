@@ -43,7 +43,7 @@
         <TextField fx:id="txtPostalCode" layoutX="516.0" layoutY="463.0" prefHeight="26.0" prefWidth="176.0" promptText="Postal  Code" />
         <TextField fx:id="txtAddress" layoutX="146.0" layoutY="463.0" prefHeight="26.0" prefWidth="362.0" promptText="Address" />
         <TextField fx:id="txtEMail" layoutX="699.0" layoutY="463.0" prefHeight="26.0" prefWidth="227.0" promptText="E-Mail" />
-      <ChoiceBox layoutX="762.0" layoutY="418.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="txtProvince" layoutX="762.0" layoutY="418.0" prefWidth="150.0" />
       <TextField fx:id="txtPhone" layoutX="14.0" layoutY="463.0" prefHeight="26.0" prefWidth="126.0" promptText="City" />
     </children>
 

@@ -1,14 +1,17 @@
 package Controller;
 
-import Model.DTO.CustomerInfoDto;
 import Model.DTO.SupplierInfoDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class Supplier {
+public class Supplier implements Initializable {
 
     ObservableList<SupplierInfoDto> supplierInfoArray= FXCollections.observableArrayList(
             new SupplierInfoDto("S001", "Ruwan Perera", "Lanka Traders", "45 Main Street", "Colombo", "Western", "00100", "071-2345678", "info@lankatraders.lk"),
@@ -74,7 +77,6 @@ public class Supplier {
         tblSupplier.refresh();
     }
 
-
     @FXML
     private TableColumn<?, ?> col_address;
 
@@ -130,7 +132,37 @@ public class Supplier {
     private ChoiceBox<String> txtProvince;
 
     @FXML
-    public void initialize() {
+    private TextField txtSupId;
+
+
+    @Override @FXML
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        col_supplier_id.setCellValueFactory(new PropertyValueFactory<>("supplierId"));
+        col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        col_company_name.setCellValueFactory(new PropertyValueFactory<>("companyName"));
+        col_address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        col_city.setCellValueFactory(new PropertyValueFactory<>("city"));
+        col_province.setCellValueFactory(new PropertyValueFactory<>("province"));
+        col_postal_code.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        col_phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        tblSupplier.setItems(supplierInfoArray);
+
+        tblSupplier.getSelectionModel().selectedItemProperty().addListener((observableValue, supplierInfoDto, t1) -> {
+            if (t1!=null){
+                txtSupId.setText(t1.getSupplierId());
+                txtName.setText(t1.getName());
+                txtCompanyName.setText(t1.getCompanyName());
+                txtAddress.setText(t1.getAddress());
+                txtCity.setText(t1.getCity());
+                txtProvince.setValue(t1.getProvince());
+                txtPostalCode.setText(t1.getPostalCode());
+                txtPhone.setText(t1.getPhone());
+                txtEMail.setText(t1.getEmail());
+            }
+        });
+
         txtProvince.getItems().addAll(
                 "Central",
                 "Eastern",
@@ -143,13 +175,7 @@ public class Supplier {
                 "Western"
         );
 
-        // Optional: set default value
+        // default value
         txtProvince.setValue("Western");
     }
-
-    @FXML
-    private TextField txtSupId;
-
-
-
 }

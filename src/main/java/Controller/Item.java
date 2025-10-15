@@ -4,14 +4,16 @@ import Model.DTO.ItemInfoDto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.event.ActionEvent;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import java.awt.event.ActionEvent;
-
-public class Item {
+public class Item implements Initializable {
 
     ObservableList<ItemInfoDto> itemInfoArray=FXCollections.observableArrayList(
             new ItemInfoDto("I001", "Basmathi Rice 5kg", "Groceries", 120, 1650.00),
@@ -102,4 +104,25 @@ public class Item {
     @FXML
     private TextField txtUnitPrice;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        col_item_code.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
+        col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
+        col_category.setCellValueFactory(new PropertyValueFactory<>("category"));
+        col_qty_on_hand.setCellValueFactory(new PropertyValueFactory<>("qtyOnHand"));
+        col_unit_price.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+
+        tblItem.setItems(itemInfoArray);
+
+        tblItem.getSelectionModel().selectedItemProperty().addListener((observableValue, itemInfoDto, t1) -> {
+
+            if(t1!=null){
+                txtItemCode.setText(t1.getItemCode());
+                txtDescription.setText(t1.getDescription());
+                txtCategory.setText(t1.getCategory());
+                txtQtyOnHand.setText(String.valueOf(t1.getQtyOnHand()));
+                txtUnitPrice.setText(String.valueOf(t1.getUnitPrice()));
+            }
+        });
+    }
 }

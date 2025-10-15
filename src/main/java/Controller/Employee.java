@@ -5,13 +5,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
 
-public class Employee {
+public class Employee implements Initializable  {
 
     ObservableList<EmployeeInfoDto> employeeInfoArray= FXCollections.observableArrayList(
             new EmployeeInfoDto("E001", "Anura Perera", "NIT12345", "1988-04-12", "Manager", 85000.00, "071-1234567", "12 Main Mawatha, Colombo", "2015-06-01", "Sakriya"),
@@ -142,5 +146,36 @@ public class Employee {
     @FXML
     private TextField txtStatus;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        col_emp_id.setCellValueFactory(new PropertyValueFactory<>("employeeId"));
+        col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        col_NIC.setCellValueFactory(new PropertyValueFactory<>("nic"));
+        col_DOB.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        col_position.setCellValueFactory(new PropertyValueFactory<>("position"));
+        col_salary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        col_contact_no.setCellValueFactory(new PropertyValueFactory<>("contactNumber"));
+        col_address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        col_joined_date.setCellValueFactory(new PropertyValueFactory<>("joinedDate"));
+        col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        tblEmployee.setItems(employeeInfoArray);
+
+        tblEmployee.getSelectionModel().selectedItemProperty().addListener((observableValue, employeeInfoDto, t1) -> {
+
+            if (t1!=null){
+                txtEmpId.setText(t1.getEmployeeId());
+                txtName.setText(t1.getName());
+                txtNic.setText(t1.getNic());
+                txtDOB.setValue(LocalDate.parse(t1.getDob()));
+                txtPosition.setText(t1.getPosition());
+                txtSalary.setText(String.valueOf(t1.getSalary()));
+                txtContactNo.setText(t1.getContactNumber());
+                txtAddress.setText(t1.getAddress());
+                txtJoinedDate.setValue(LocalDate.parse(t1.getJoinedDate()));
+                txtStatus.setText(t1.getStatus());
+            }
+        });
+    }
 }
