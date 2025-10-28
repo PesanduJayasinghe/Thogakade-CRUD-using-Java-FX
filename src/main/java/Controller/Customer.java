@@ -13,18 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class Customer implements Initializable {
 
-    ObservableList<CustomerInfoDto> customerInfoArray= FXCollections.observableArrayList(
-            new CustomerInfoDto("C001", "Mr.", "John Smith", "1985-03-14", 65000.00, "123 Elm Street", "New York", "NY", "10001"),
-            new CustomerInfoDto("C002", "Ms.", "Sarah Johnson", "1990-07-22", 72000.00, "456 Pine Avenue", "Los Angeles", "CA", "90012"),
-            new CustomerInfoDto("C003", "Dr.", "Michael Lee", "1978-11-03", 95000.00, "789 Oak Road", "Chicago", "IL", "60616"),
-            new CustomerInfoDto("C004", "Mrs.", "Emily Davis", "1992-02-09", 58000.00, "321 Maple Lane", "Houston", "TX", "77002"),
-            new CustomerInfoDto("C005", "Mr.", "Robert Wilson", "1980-09-30", 87000.00, "654 Birch Street", "Seattle", "WA", "98101")
-    );
+    ObservableList<CustomerInfoDto> customerInfoArray= FXCollections.observableArrayList( );
 
     @FXML
     void btnAdd(ActionEvent event) {
@@ -38,8 +33,28 @@ public class Customer implements Initializable {
         String province= (String) txtProvince.getValue();
         String postalCode=txtPostalCode.getText();
 
-        CustomerInfoDto customerInfo=new CustomerInfoDto(custId,title,name,dob,salary,address,city,province,postalCode);
-        customerInfoArray.add(customerInfo);
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            PreparedStatement preparedStatement= connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?,?,?,?,?,?)");
+
+            preparedStatement.setObject(1,custId);
+            preparedStatement.setObject(2,title);
+            preparedStatement.setObject(3,name);
+            preparedStatement.setObject(4,dob);
+            preparedStatement.setObject(5,salary);
+            preparedStatement.setObject(6,address);
+            preparedStatement.setObject(7,city);
+            preparedStatement.setObject(8,province);
+            preparedStatement.setObject(9,postalCode);
+
+            preparedStatement.execute();
+            loadCustomerDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @FXML
@@ -58,27 +73,49 @@ public class Customer implements Initializable {
     }
 
     @FXML
-    void btnUpdate(ActionEvent event) {
-        CustomerInfoDto customerInfo=tblCustomer.getSelectionModel().getSelectedItem();
+    void btnUpdate(ActionEvent event){
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            PreparedStatement preparedStatement=connection.prepareStatement("UPDATE customer SET title=?, name=?, dob=?, salary=?, address=?, city=?, province=?, postalCode=? WHERE custId=?");
 
-        customerInfo.setName(txtName.getText());
-        customerInfo.setAddress(txtAddress.getText());
-        customerInfo.setCity(txtCity.getText());
-        customerInfo.setDob(txtDOB.getValue().toString());
-        customerInfo.setSalary(Double.parseDouble(txtSalary.getText()));
-        customerInfo.setCustId(txtCustId.getText());
-        customerInfo.setProvince(txtProvince.getValue());
-        customerInfo.setTitle(txtTitle.getText());
-        customerInfo.setPostalCode(txtPostalCode.getText());
+            preparedStatement.setObject(1,txtTitle.getText());
+            preparedStatement.setObject(2,txtName.getText());
+            preparedStatement.setObject(3,txtDOB.getValue().toString());
+            preparedStatement.setObject(4,txtSalary.getText());
+            preparedStatement.setObject(5, txtAddress.getText());
+            preparedStatement.setObject(6, txtCity.getText());
+            preparedStatement.setObject(7, txtProvince.getValue());
+            preparedStatement.setObject(8, txtPostalCode.getText());
+            preparedStatement.setObject(9, txtCustId.getText());
 
-        tblCustomer.refresh();
+            preparedStatement.execute();
+            loadCustomerDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     @FXML
     void btnDelete(ActionEvent event) {
-        CustomerInfoDto selectedInfo=tblCustomer.getSelectionModel().getSelectedItem();
-        customerInfoArray.remove(selectedInfo);
-        tblCustomer.refresh();
+
+
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM customer WHERE custId=?");
+
+            preparedStatement.setObject(1,txtCustId.getText());
+
+            preparedStatement.execute();
+            loadCustomerDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -151,7 +188,7 @@ public class Customer implements Initializable {
         col_province.setCellValueFactory(new PropertyValueFactory<>("province"));
         col_postal_code.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
 
-        tblCustomer.setItems(customerInfoArray);
+        loadCustomerDetails();
 
         tblCustomer.getSelectionModel().selectedItemProperty().addListener((observableValue, customerInfoDto, t1) -> {
             if (t1 != null) {
@@ -163,6 +200,7 @@ public class Customer implements Initializable {
                 txtAddress.setText(t1.getAddress());
                 txtCity.setText(t1.getCity());
                 txtProvince.setValue(t1.getProvince());
+                txtPostalCode.setText(t1.getPostalCode());
             }
 
         });
@@ -178,8 +216,54 @@ public class Customer implements Initializable {
                 "Uva",
                 "Western"
         );
-
         //default value
-        txtProvince.setValue("Western");
+        txtProvince.setValue("Province");
+
+
     }
+
+    private void loadCustomerDetails() {
+
+        customerInfoArray.clear(); // Assuming you have a List<CustomerDTO> named customerDTOs
+
+        try {
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234"
+            );
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                CustomerInfoDto customerDTO = new CustomerInfoDto(
+                        resultSet.getString("custId"),
+                        resultSet.getString("title"),
+                        resultSet.getString("name"),
+                        resultSet.getString("dob"),        // You can also use resultSet.getDate("dob") if DTO uses java.sql.Date
+                        resultSet.getDouble("salary"),
+                        resultSet.getString("address"),
+                        resultSet.getString("city"),
+                        resultSet.getString("province"),
+                        resultSet.getString("postalCode")
+                );
+                customerInfoArray.add(customerDTO);
+            }
+            tblCustomer.setItems(customerInfoArray);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void clearFields(){
+        txtCustId.clear();
+        txtTitle.clear();
+        txtName.clear();
+        txtSalary.clear();
+        txtDOB.setValue(null);
+        txtAddress.clear();
+        txtCity.clear();
+        txtPostalCode.clear();
+        txtProvince.setValue(null);
+    }
+
 }
