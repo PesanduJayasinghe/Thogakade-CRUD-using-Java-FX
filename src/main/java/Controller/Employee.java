@@ -12,18 +12,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class Employee implements Initializable  {
 
-    ObservableList<EmployeeInfoDto> employeeInfoArray= FXCollections.observableArrayList(
-            new EmployeeInfoDto("E001", "Anura Perera", "NIT12345", "1988-04-12", "Manager", 85000.00, "071-1234567", "12 Main Mawatha, Colombo", "2015-06-01", "Sakriya"),
-            new EmployeeInfoDto("E002", "Kavindu Jayasinghe", "NIT23456", "1992-09-25", "Software Developer", 72000.00, "071-2345678", "45 Temple Road, Kandy", "2018-03-12", "Sakriya"),
-            new EmployeeInfoDto("E003", "Nimali Silva", "NIT34567", "1985-01-30", "HR Officer", 65000.00, "071-3456789", "89 Galle Road, Matara", "2016-09-20", "Nisakriya"),
-            new EmployeeInfoDto("E004", "Sampath Fernando", "NIT45678", "1990-07-18", "Accountant", 70000.00, "071-4567890", "23 Lake View, Kurunegala", "2017-11-05", "Sakriya"),
-            new EmployeeInfoDto("E005", "Tharushi Ranasinghe", "NIT56789", "1995-12-02", "Graphic Designer", 68000.00, "071-5678901", "56 Beach Road, Negombo", "2020-01-15", "Sakriya")
-    );
+    ObservableList<EmployeeInfoDto> employeeInfoArray= FXCollections.observableArrayList();
 
     @FXML
     void btnAdd(ActionEvent event) {
@@ -38,8 +33,29 @@ public class Employee implements Initializable  {
         String joinedDate=txtJoinedDate.getValue().toString();
         String status=txtStatus.getText();
 
-        EmployeeInfoDto employeeInfo=new EmployeeInfoDto(employeeId,name,nic,dob,position,salary,contactNumber,address,joinedDate,status);
-        employeeInfoArray.add(employeeInfo);
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            PreparedStatement preparedStatement= connection.prepareStatement("INSERT INTO employee VALUES(?,?,?,?,?,?,?,?,?,?)");
+
+            preparedStatement.setObject(1,employeeId);
+            preparedStatement.setObject(2,name);
+            preparedStatement.setObject(3,nic);
+            preparedStatement.setObject(4,dob);
+            preparedStatement.setObject(5,position);
+            preparedStatement.setObject(6,salary);
+            preparedStatement.setObject(7,contactNumber);
+            preparedStatement.setObject(8,address);
+            preparedStatement.setObject(9,joinedDate);
+            preparedStatement.setObject(10,status);
+
+
+            preparedStatement.execute();
+            loadEmployeeDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -49,10 +65,21 @@ public class Employee implements Initializable  {
 
     @FXML
     void btnDelete(ActionEvent event) {
-        EmployeeInfoDto selectedInfo=tblEmployee.getSelectionModel().getSelectedItem();
-        employeeInfoArray.remove(selectedInfo);
-        tblEmployee.refresh();
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM employee WHERE emp_id=?");
 
+            preparedStatement.setObject(1,txtEmpId.getText());
+
+            preparedStatement.execute();
+
+            loadEmployeeDetails();
+
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -67,20 +94,28 @@ public class Employee implements Initializable  {
 
     @FXML
     void btnUpdate(ActionEvent event) {
-        EmployeeInfoDto employeeInfo=tblEmployee.getSelectionModel().getSelectedItem();
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            PreparedStatement preparedStatement=connection.prepareStatement("UPDATE employee SET name=?, nic=?, dob=?, position=?, salary=?, contactNumber=?, address=?, joinedDate=?, status=? WHERE emp_id=?");
 
-        employeeInfo.setName(txtName.getText());
-        employeeInfo.setEmployeeId(txtEmpId.getText());
-        employeeInfo.setDob(txtDOB.getValue().toString());
-        employeeInfo.setNic(txtNic.getText());
-        employeeInfo.setAddress(txtAddress.getText());
-        employeeInfo.setSalary(Double.parseDouble(txtSalary.getText()));
-        employeeInfo.setStatus(txtStatus.getText());
-        employeeInfo.setPosition(txtPosition.getText());
-        employeeInfo.setJoinedDate(txtJoinedDate.getValue().toString());
-        employeeInfo.setContactNumber(txtContactNo.getText());
+            preparedStatement.setString(1, txtName.getText());
+            preparedStatement.setString(2, txtNic.getText());
+            preparedStatement.setString(3, txtDOB.getValue().toString());
+            preparedStatement.setString(4, txtPosition.getText());
+            preparedStatement.setDouble(5, Double.parseDouble(txtSalary.getText()));
+            preparedStatement.setString(6, txtContactNo.getText());
+            preparedStatement.setString(7, txtAddress.getText());
+            preparedStatement.setString(8, txtJoinedDate.getValue().toString());
+            preparedStatement.setString(9, txtStatus.getText());
+            preparedStatement.setString(10, txtEmpId.getText());
 
-        tblEmployee.refresh();
+            preparedStatement.execute();
+            loadEmployeeDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -160,7 +195,7 @@ public class Employee implements Initializable  {
         col_joined_date.setCellValueFactory(new PropertyValueFactory<>("joinedDate"));
         col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        tblEmployee.setItems(employeeInfoArray);
+        loadEmployeeDetails();
 
         tblEmployee.getSelectionModel().selectedItemProperty().addListener((observableValue, employeeInfoDto, t1) -> {
 
@@ -177,5 +212,53 @@ public class Employee implements Initializable  {
                 txtStatus.setText(t1.getStatus());
             }
         });
+    }
+
+    private void loadEmployeeDetails() {
+
+        employeeInfoArray.clear(); // Assuming you have a List<CustomerDTO> named customerDTOs
+
+        try {
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234"
+            );
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM employee");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                EmployeeInfoDto employeeDTO = new EmployeeInfoDto(
+                        resultSet.getString("emp_Id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("nic"),
+                        resultSet.getString("dob"),
+                        resultSet.getString("position"),
+                        resultSet.getDouble("salary"),
+                        resultSet.getString("contactNumber"),
+                        resultSet.getString("address"),
+                        resultSet.getString("joinedDate"),
+                        resultSet.getString("status")
+                );
+                employeeInfoArray.add(employeeDTO);
+            }
+
+            tblEmployee.setItems(employeeInfoArray);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void clearFields(){
+
+        txtEmpId.clear();
+        txtName.clear();
+        txtNic.clear();
+        txtStatus.clear();
+        txtAddress.clear();
+        txtStatus.clear();
+        txtJoinedDate.setValue(null);
+        txtDOB.setValue(null);
+        txtPosition.clear();
+        txtContactNo.clear();
     }
 }
