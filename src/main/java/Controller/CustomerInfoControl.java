@@ -33,27 +33,11 @@ public class CustomerInfoControl implements Initializable {
         String province= (String) txtProvince.getValue();
         String postalCode=txtPostalCode.getText();
 
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
-            PreparedStatement preparedStatement= connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?,?,?,?,?,?)");
+        CustomerController customerController = new CustomerController();
+        customerController.addCustomerDetails(custId,title,name,dob,salary,address,city,province,postalCode);
 
-            preparedStatement.setObject(1,custId);
-            preparedStatement.setObject(2,title);
-            preparedStatement.setObject(3,name);
-            preparedStatement.setObject(4,dob);
-            preparedStatement.setObject(5,salary);
-            preparedStatement.setObject(6,address);
-            preparedStatement.setObject(7,city);
-            preparedStatement.setObject(8,province);
-            preparedStatement.setObject(9,postalCode);
-
-            preparedStatement.execute();
-            loadCustomerDetails();
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadCustomerDetails();
+        clearFields();
 
     }
 
@@ -74,48 +58,30 @@ public class CustomerInfoControl implements Initializable {
 
     @FXML
     void btnUpdate(ActionEvent event){
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
-            PreparedStatement preparedStatement=connection.prepareStatement("UPDATE customer SET title=?, name=?, dob=?, salary=?, address=?, city=?, province=?, postalCode=? WHERE custId=?");
 
-            preparedStatement.setObject(1,txtTitle.getText());
-            preparedStatement.setObject(2,txtName.getText());
-            preparedStatement.setObject(3,txtDOB.getValue().toString());
-            preparedStatement.setObject(4,txtSalary.getText());
-            preparedStatement.setObject(5, txtAddress.getText());
-            preparedStatement.setObject(6, txtCity.getText());
-            preparedStatement.setObject(7, txtProvince.getValue());
-            preparedStatement.setObject(8, txtPostalCode.getText());
-            preparedStatement.setObject(9, txtCustId.getText());
+        String custId=txtCustId.getText();
+        String title=txtTitle.getText();
+        String name=txtName.getText();
+        String dob=txtDOB.getValue().toString();
+        double salary= Double.parseDouble(txtSalary.getText());
+        String address=txtAddress.getText();
+        String city=txtCity.getText();
+        String province= (String) txtProvince.getValue();
+        String postalCode=txtPostalCode.getText();
 
-            preparedStatement.execute();
-            loadCustomerDetails();
-            clearFields();
+        CustomerController customerController = new CustomerController();
+        customerController.updateCustomerDetails(custId,title,name,dob,salary,address,city,province,postalCode);
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        loadCustomerDetails();
+        clearFields();
     }
 
     @FXML
     void btnDelete(ActionEvent event) {
-
-
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
-            PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM customer WHERE custId=?");
-
-            preparedStatement.setObject(1,txtCustId.getText());
-
-            preparedStatement.execute();
-            loadCustomerDetails();
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        CustomerController customerController = new CustomerController();
+        customerController.deleteCustomerDetails(txtCustId.getText());
+        loadCustomerDetails();
+        clearFields();
     }
 
 
@@ -226,32 +192,9 @@ public class CustomerInfoControl implements Initializable {
 
         customerInfoArray.clear(); // Assuming you have a List<CustomerDTO> named customerDTOs
 
-        try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234"
-            );
+        CustomerController customerController=new CustomerController();
 
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer");
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                CustomerInfoDto customerDTO = new CustomerInfoDto(
-                        resultSet.getString("custId"),
-                        resultSet.getString("title"),
-                        resultSet.getString("name"),
-                        resultSet.getString("dob"),        // You can also use resultSet.getDate("dob") if DTO uses java.sql.Date
-                        resultSet.getDouble("salary"),
-                        resultSet.getString("address"),
-                        resultSet.getString("city"),
-                        resultSet.getString("province"),
-                        resultSet.getString("postalCode")
-                );
-                customerInfoArray.add(customerDTO);
-            }
-            tblCustomer.setItems(customerInfoArray);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        tblCustomer.setItems(customerController.loadCustomerDetails());
     }
 
     public void clearFields(){
