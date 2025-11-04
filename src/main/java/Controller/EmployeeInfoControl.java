@@ -33,29 +33,12 @@ public class EmployeeInfoControl implements Initializable  {
         String joinedDate=txtJoinedDate.getValue().toString();
         String status=txtStatus.getText();
 
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
-            PreparedStatement preparedStatement= connection.prepareStatement("INSERT INTO employee VALUES(?,?,?,?,?,?,?,?,?,?)");
-
-            preparedStatement.setObject(1,employeeId);
-            preparedStatement.setObject(2,name);
-            preparedStatement.setObject(3,nic);
-            preparedStatement.setObject(4,dob);
-            preparedStatement.setObject(5,position);
-            preparedStatement.setObject(6,salary);
-            preparedStatement.setObject(7,contactNumber);
-            preparedStatement.setObject(8,address);
-            preparedStatement.setObject(9,joinedDate);
-            preparedStatement.setObject(10,status);
+        EmployeeController employeeController=new EmployeeController();
+        employeeController.addEmployeeDetails(employeeId,name,nic,dob,position,salary,contactNumber,address,joinedDate,status);
 
 
-            preparedStatement.execute();
-            loadEmployeeDetails();
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadEmployeeDetails();
+        clearFields();
     }
 
     @FXML
@@ -65,21 +48,12 @@ public class EmployeeInfoControl implements Initializable  {
 
     @FXML
     void btnDelete(ActionEvent event) {
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
-            PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM employee WHERE emp_id=?");
 
-            preparedStatement.setObject(1,txtEmpId.getText());
+        EmployeeController employeeController=new EmployeeController();
+        employeeController.deleteEmployeeDetails(txtEmpId.getText());
 
-            preparedStatement.execute();
-
-            loadEmployeeDetails();
-
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadEmployeeDetails();
+        clearFields();
     }
 
     @FXML
@@ -94,28 +68,22 @@ public class EmployeeInfoControl implements Initializable  {
 
     @FXML
     void btnUpdate(ActionEvent event) {
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
-            PreparedStatement preparedStatement=connection.prepareStatement("UPDATE employee SET name=?, nic=?, dob=?, position=?, salary=?, contactNumber=?, address=?, joinedDate=?, status=? WHERE emp_id=?");
+        String employeeId=txtEmpId.getText();
+        String name=txtName.getText();
+        String nic=txtNic.getText();
+        String dob=txtDOB.getValue().toString();
+        String position=txtPosition.getText();
+        double salary= Double.parseDouble(txtSalary.getText());
+        String contactNumber=txtContactNo.getText();
+        String address=txtAddress.getText();
+        String joinedDate=txtJoinedDate.getValue().toString();
+        String status=txtStatus.getText();
 
-            preparedStatement.setString(1, txtName.getText());
-            preparedStatement.setString(2, txtNic.getText());
-            preparedStatement.setString(3, txtDOB.getValue().toString());
-            preparedStatement.setString(4, txtPosition.getText());
-            preparedStatement.setDouble(5, Double.parseDouble(txtSalary.getText()));
-            preparedStatement.setString(6, txtContactNo.getText());
-            preparedStatement.setString(7, txtAddress.getText());
-            preparedStatement.setString(8, txtJoinedDate.getValue().toString());
-            preparedStatement.setString(9, txtStatus.getText());
-            preparedStatement.setString(10, txtEmpId.getText());
+        EmployeeController employeeController=new EmployeeController();
+        employeeController.updateEmployeeDetails(employeeId,name,nic,dob,position,salary,contactNumber,address,joinedDate,status);
 
-            preparedStatement.execute();
-            loadEmployeeDetails();
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadEmployeeDetails();
+        clearFields();
     }
 
     @FXML
@@ -218,34 +186,9 @@ public class EmployeeInfoControl implements Initializable  {
 
         employeeInfoArray.clear(); // Assuming you have a List<CustomerDTO> named customerDTOs
 
-        try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234"
-            );
+        EmployeeController employeeController=new EmployeeController();
 
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM employee");
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                EmployeeInfoDto employeeDTO = new EmployeeInfoDto(
-                        resultSet.getString("emp_Id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("nic"),
-                        resultSet.getString("dob"),
-                        resultSet.getString("position"),
-                        resultSet.getDouble("salary"),
-                        resultSet.getString("contactNumber"),
-                        resultSet.getString("address"),
-                        resultSet.getString("joinedDate"),
-                        resultSet.getString("status")
-                );
-                employeeInfoArray.add(employeeDTO);
-            }
-
-            tblEmployee.setItems(employeeInfoArray);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        tblEmployee.setItems(employeeController.loadEmployeeDetails());
     }
 
     public void clearFields(){
