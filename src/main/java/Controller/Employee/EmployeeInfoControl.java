@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Employee;
 
 import Model.DTO.EmployeeInfoDto;
 import javafx.collections.FXCollections;
@@ -12,13 +12,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
-import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class EmployeeInfoControl implements Initializable  {
 
     ObservableList<EmployeeInfoDto> employeeInfoArray= FXCollections.observableArrayList();
+    EmployeeController employeeController=new EmployeeController();
 
     @FXML
     void btnAdd(ActionEvent event) {
@@ -33,9 +33,7 @@ public class EmployeeInfoControl implements Initializable  {
         String joinedDate=txtJoinedDate.getValue().toString();
         String status=txtStatus.getText();
 
-        EmployeeController employeeController=new EmployeeController();
         employeeController.addEmployeeDetails(employeeId,name,nic,dob,position,salary,contactNumber,address,joinedDate,status);
-
 
         loadEmployeeDetails();
         clearFields();
@@ -49,7 +47,6 @@ public class EmployeeInfoControl implements Initializable  {
     @FXML
     void btnDelete(ActionEvent event) {
 
-        EmployeeController employeeController=new EmployeeController();
         employeeController.deleteEmployeeDetails(txtEmpId.getText());
 
         loadEmployeeDetails();
@@ -79,7 +76,6 @@ public class EmployeeInfoControl implements Initializable  {
         String joinedDate=txtJoinedDate.getValue().toString();
         String status=txtStatus.getText();
 
-        EmployeeController employeeController=new EmployeeController();
         employeeController.updateEmployeeDetails(employeeId,name,nic,dob,position,salary,contactNumber,address,joinedDate,status);
 
         loadEmployeeDetails();
@@ -185,8 +181,6 @@ public class EmployeeInfoControl implements Initializable  {
     private void loadEmployeeDetails() {
 
         employeeInfoArray.clear(); // Assuming you have a List<CustomerDTO> named customerDTOs
-
-        EmployeeController employeeController=new EmployeeController();
 
         tblEmployee.setItems(employeeController.loadEmployeeDetails());
     }

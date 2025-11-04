@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Item;
 
 import Model.DTO.ItemInfoDto;
 import javafx.collections.FXCollections;
@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 public class ItemInfoControl implements Initializable {
 
     ObservableList<ItemInfoDto> itemInfoArray = FXCollections.observableArrayList();
+    ItemController itemController=new ItemController();
 
     @FXML
     private TableView<ItemInfoDto> tblItem;
@@ -62,65 +63,34 @@ public class ItemInfoControl implements Initializable {
         int qtyOnHand = Integer.parseInt(txtQtyOnHand.getText());
         double unitPrice = Double.parseDouble(txtUnitPrice.getText());
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
+        itemController.addItemInfo(itemCode,description,category,qtyOnHand,unitPrice);
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO items VALUES (?, ?, ?, ?, ?)");
-            ps.setObject(1, itemCode);
-            ps.setObject(2, description);
-            ps.setObject(3, category);
-            ps.setObject(4, qtyOnHand);
-            ps.setObject(5, unitPrice);
-            ps.executeUpdate();
-
-            loadItemDetails();
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadItemDetails();
+        clearFields();
     }
 
     @FXML
     void btnUpdate(ActionEvent event) {
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
 
-            PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE items SET description=?, category=?, qtyOnHand=?, unitPrice=? WHERE itemCode=?"
-            );
-            ps.setObject(1, txtDescription.getText());
-            ps.setObject(2, txtCategory.getText());
-            ps.setObject(3, Integer.parseInt(txtQtyOnHand.getText()));
-            ps.setObject(4, Double.parseDouble(txtUnitPrice.getText()));
-            ps.setObject(5, txtItemCode.getText());
-            ps.executeUpdate();
+        String itemCode = txtItemCode.getText();
+        String description = txtDescription.getText();
+        String category = txtCategory.getText();
+        int qtyOnHand = Integer.parseInt(txtQtyOnHand.getText());
+        double unitPrice = Double.parseDouble(txtUnitPrice.getText());
 
-            loadItemDetails();
-            clearFields();
+        itemController.updateItemInfo(itemCode,description,category,qtyOnHand,unitPrice);
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadItemDetails();
+        clearFields();
     }
 
     @FXML
     void btnDelete(ActionEvent event) {
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
 
-            PreparedStatement ps = connection.prepareStatement(
-                    "DELETE FROM items WHERE itemCode=?"
-            );
-            ps.setObject(1, txtItemCode.getText());
-            ps.executeUpdate();
+        itemController.deleteItemInfo( txtItemCode.getText() );
 
-            loadItemDetails();
-            clearFields();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        loadItemDetails();
+        clearFields();
     }
 
     @FXML
@@ -162,28 +132,7 @@ public class ItemInfoControl implements Initializable {
 
     private void loadItemDetails() {
         itemInfoArray.clear();
-
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
-
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM items");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                itemInfoArray.add(new ItemInfoDto(
-                        rs.getString("itemCode"),
-                        rs.getString("description"),
-                        rs.getString("category"),
-                        rs.getInt("qtyOnHand"),
-                        rs.getDouble("unitPrice")
-                ));
-            }
-
-            tblItem.setItems(itemInfoArray);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        tblItem.setItems(itemController.loadItemTable());
     }
 
     private void clearFields() {

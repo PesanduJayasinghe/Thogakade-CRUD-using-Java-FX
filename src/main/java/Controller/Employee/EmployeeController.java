@@ -1,16 +1,18 @@
-package Controller;
+package Controller.Employee;
 
 import Model.DTO.EmployeeInfoDto;
+import db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 
-public class EmployeeController {
+public class EmployeeController implements EmployeeService {
 
+    @Override
     public void addEmployeeDetails(String employeeId, String name, String nic, String dob, String position, double salary, String contactNumber, String address, String joinedDate, String status){
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement preparedStatement= connection.prepareStatement("INSERT INTO employee VALUES(?,?,?,?,?,?,?,?,?,?)");
 
             preparedStatement.setObject(1,employeeId);
@@ -32,9 +34,10 @@ public class EmployeeController {
         }
     }
 
+    @Override
     public void deleteEmployeeDetails(String empId){
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM employee WHERE emp_id=?");
 
             preparedStatement.setObject(1,empId);
@@ -46,9 +49,10 @@ public class EmployeeController {
         }
     }
 
+    @Override
     public void updateEmployeeDetails(String employeeId, String name, String nic, String dob, String position, double salary, String contactNumber, String address, String joinedDate, String status){
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement preparedStatement=connection.prepareStatement("UPDATE employee SET name=?, nic=?, dob=?, position=?, salary=?, contactNumber=?, address=?, joinedDate=?, status=? WHERE emp_id=?");
 
             preparedStatement.setString(1, name);
@@ -69,14 +73,13 @@ public class EmployeeController {
         }
     }
 
+    @Override
     public ObservableList<EmployeeInfoDto> loadEmployeeDetails(){
 
         ObservableList<EmployeeInfoDto> employeeInfoArray= FXCollections.observableArrayList();
 
         try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234"
-            );
+            Connection connection = DBConnection.getInstance().getConnection();
 
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM employee");
             ResultSet resultSet = preparedStatement.executeQuery();
