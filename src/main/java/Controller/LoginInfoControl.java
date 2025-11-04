@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-public class Login {
+public class LoginInfoControl {
 
     @FXML
     private TextField txtPassword;

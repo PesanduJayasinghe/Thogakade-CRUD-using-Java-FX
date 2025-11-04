@@ -16,7 +16,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class Employee implements Initializable  {
+public class EmployeeInfoControl implements Initializable  {
 
     ObservableList<EmployeeInfoDto> employeeInfoArray= FXCollections.observableArrayList();
 

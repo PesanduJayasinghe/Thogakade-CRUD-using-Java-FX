@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Supplier implements Initializable {
+public class SupplierInfoControl implements Initializable {
 
     ObservableList<SupplierInfoDto> supplierInfoArray= FXCollections.observableArrayList(
             new SupplierInfoDto("S001", "Ruwan Perera", "Lanka Traders", "45 Main Street", "Colombo", "Western", "00100", "071-2345678", "info@lankatraders.lk"),
