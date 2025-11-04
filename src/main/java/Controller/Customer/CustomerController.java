@@ -1,16 +1,18 @@
-package Controller;
+package Controller.Customer;
 
 import Model.DTO.CustomerInfoDto;
+import db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 
-public class CustomerController {
+public class CustomerController implements CustomerService{
 
+    @Override
     public void addCustomerDetails(String custId, String title, String name, String dob, double salary, String address, String city, String province, String postalCode){
         try {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement preparedStatement= connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?,?,?,?,?,?)");
 
         preparedStatement.setObject(1,custId);
@@ -33,9 +35,10 @@ public class CustomerController {
 
     }
 
+    @Override
     public void deleteCustomerDetails(String custId){
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement preparedStatement=connection.prepareStatement("DELETE FROM customer WHERE custId=?");
 
             preparedStatement.setObject(1,custId);
@@ -48,9 +51,10 @@ public class CustomerController {
         }
     }
 
+    @Override
     public void updateCustomerDetails(String custId, String title, String name, String dob, double salary, String address, String city, String province, String postalCode){
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234");
+            Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement preparedStatement=connection.prepareStatement("UPDATE customer SET title=?, name=?, dob=?, salary=?, address=?, city=?, province=?, postalCode=? WHERE custId=?");
 
             preparedStatement.setObject(1,title);
@@ -71,16 +75,14 @@ public class CustomerController {
 
     }
 
+    @Override
     public ObservableList<CustomerInfoDto> loadCustomerDetails(){
 
         ObservableList<CustomerInfoDto> customerInfoArray= FXCollections.observableArrayList( );
 
 
         try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234"
-            );
-
+            Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer");
             ResultSet resultSet = preparedStatement.executeQuery();
 

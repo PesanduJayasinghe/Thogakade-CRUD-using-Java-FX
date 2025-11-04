@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Customer;
 
 import Model.DTO.CustomerInfoDto;
 import javafx.collections.FXCollections;
@@ -13,13 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
-import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class CustomerInfoControl implements Initializable {
 
     ObservableList<CustomerInfoDto> customerInfoArray= FXCollections.observableArrayList( );
+    CustomerController customerController=new CustomerController();
 
     @FXML
     void btnAdd(ActionEvent event) {
@@ -33,7 +33,6 @@ public class CustomerInfoControl implements Initializable {
         String province= (String) txtProvince.getValue();
         String postalCode=txtPostalCode.getText();
 
-        CustomerController customerController = new CustomerController();
         customerController.addCustomerDetails(custId,title,name,dob,salary,address,city,province,postalCode);
 
         loadCustomerDetails();
@@ -69,7 +68,6 @@ public class CustomerInfoControl implements Initializable {
         String province= (String) txtProvince.getValue();
         String postalCode=txtPostalCode.getText();
 
-        CustomerController customerController = new CustomerController();
         customerController.updateCustomerDetails(custId,title,name,dob,salary,address,city,province,postalCode);
 
         loadCustomerDetails();
@@ -78,7 +76,6 @@ public class CustomerInfoControl implements Initializable {
 
     @FXML
     void btnDelete(ActionEvent event) {
-        CustomerController customerController = new CustomerController();
         customerController.deleteCustomerDetails(txtCustId.getText());
         loadCustomerDetails();
         clearFields();
@@ -191,8 +188,6 @@ public class CustomerInfoControl implements Initializable {
     private void loadCustomerDetails() {
 
         customerInfoArray.clear(); // Assuming you have a List<CustomerDTO> named customerDTOs
-
-        CustomerController customerController=new CustomerController();
 
         tblCustomer.setItems(customerController.loadCustomerDetails());
     }
