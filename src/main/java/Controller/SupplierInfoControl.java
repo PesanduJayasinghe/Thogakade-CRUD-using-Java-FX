@@ -8,134 +8,114 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import java.net.URL;
+import java.sql.*;
 import java.util.ResourceBundle;
 
 public class SupplierInfoControl implements Initializable {
 
-    ObservableList<SupplierInfoDto> supplierInfoArray= FXCollections.observableArrayList(
-            new SupplierInfoDto("S001", "Ruwan Perera", "Lanka Traders", "45 Main Street", "Colombo", "Western", "00100", "071-2345678", "info@lankatraders.lk"),
-            new SupplierInfoDto("S002", "Nadeesha Silva", "Sunrise Distributors", "12 Temple Road", "Kandy", "Central", "20000", "071-3456789", "sales@sunrise.lk"),
-            new SupplierInfoDto("S003", "Kamal Fernando", "Evergreen Supplies", "78 Galle Road", "Matara", "Southern", "81000", "071-4567890", "contact@evergreen.lk"),
-            new SupplierInfoDto("S004", "Thilini Jayawardena", "Highland Imports", "23 Lake View", "Kurunegala", "North Western", "60000", "071-5678901", "support@highland.lk"),
-            new SupplierInfoDto("S005", "Ashan Ranasinghe", "Royal Foods", "56 Beach Road", "Negombo", "Western", "11500", "071-6789012", "royalfoods@gmail.com")
-
-    );
-
-    @FXML
-    void btnAdd(ActionEvent event) {
-        String supplierId=txtSupId.getText();
-        String name=txtName.getText();
-        String companyName=txtCompanyName.getText();
-        String address=txtAddress.getText();
-        String city=txtCity.getText();
-        String province=txtProvince.getValue();
-        String postalCode=txtPostalCode.getText();
-        String phone=txtPhone.getText();
-        String email=txtEMail.getText();
-
-        SupplierInfoDto supplierInfo=new SupplierInfoDto(supplierId,name,companyName,address,city,province,postalCode,phone,email);
-        supplierInfoArray.add(supplierInfo);
-    }
-
-    @FXML
-    void btnCustomerManage(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnDelete(ActionEvent event) {
-        SupplierInfoDto selectedInfo=tblSupplier.getSelectionModel().getSelectedItem();
-        supplierInfoArray.remove(selectedInfo);
-        tblSupplier.refresh();
-    }
-
-    @FXML
-    void btnEmployeeManage(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnItemManage(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnUpdate(ActionEvent event) {
-        SupplierInfoDto supplierInfo=tblSupplier.getSelectionModel().getSelectedItem();
-
-        supplierInfo.setSupplierId(txtSupId.getText());
-        supplierInfo.setName(txtName.getText());
-        supplierInfo.setAddress(txtAddress.getText());
-        supplierInfo.setCity(txtCity.getText());
-        supplierInfo.setEmail(txtEMail.getText());
-        supplierInfo.setPhone(txtPhone.getText());
-        supplierInfo.setCompanyName(txtCompanyName.getText());
-        supplierInfo.setPostalCode(txtPostalCode.getText());
-        supplierInfo.setProvince(txtProvince.getValue());
-
-        tblSupplier.refresh();
-    }
-
-    @FXML
-    private TableColumn<?, ?> col_address;
-
-    @FXML
-    private TableColumn<?, ?> col_city;
-
-    @FXML
-    private TableColumn<?, ?> col_company_name;
-
-    @FXML
-    private TableColumn<?, ?> col_email;
-
-    @FXML
-    private TableColumn<?, ?> col_name;
-
-    @FXML
-    private TableColumn<?, ?> col_phone;
-
-    @FXML
-    private TableColumn<?, ?> col_postal_code;
-
-    @FXML
-    private TableColumn<?, ?> col_province;
-
-    @FXML
-    private TableColumn<?, ?> col_supplier_id;
+    ObservableList<SupplierInfoDto> supplierInfoArray = FXCollections.observableArrayList();
 
     @FXML
     private TableView<SupplierInfoDto> tblSupplier;
 
     @FXML
-    private TextField txtAddress;
+    private TableColumn<?, ?> col_supplier_id, col_name, col_company_name, col_address, col_city, col_province, col_postal_code, col_phone, col_email;
 
     @FXML
-    private TextField txtCity;
-
-    @FXML
-    private TextField txtCompanyName;
-
-    @FXML
-    private TextField txtEMail;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private TextField txtPostalCode;
-
-    @FXML
-    private TextField txtPhone;
+    private TextField txtSupId, txtName, txtCompanyName, txtAddress, txtCity, txtPostalCode, txtPhone, txtEMail;
 
     @FXML
     private ChoiceBox<String> txtProvince;
 
+
+
     @FXML
-    private TextField txtSupId;
+    void btnAdd(ActionEvent event) {
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
+
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO suppliers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            ps.setObject(1, txtSupId.getText());
+            ps.setObject(2, txtName.getText());
+            ps.setObject(3, txtCompanyName.getText());
+            ps.setObject(4, txtAddress.getText());
+            ps.setObject(5, txtCity.getText());
+            ps.setObject(6, txtProvince.getValue());
+            ps.setObject(7, txtPostalCode.getText());
+            ps.setObject(8, txtPhone.getText());
+            ps.setObject(9, txtEMail.getText());
+
+            ps.executeUpdate();
+            loadSupplierDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    void btnUpdate(ActionEvent event) {
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
+
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE suppliers SET name=?, companyName=?, address=?, city=?, province=?, postalCode=?, phone=?, email=? WHERE supplierId=?"
+            );
+
+            ps.setObject(1, txtName.getText());
+            ps.setObject(2, txtCompanyName.getText());
+            ps.setObject(3, txtAddress.getText());
+            ps.setObject(4, txtCity.getText());
+            ps.setObject(5, txtProvince.getValue());
+            ps.setObject(6, txtPostalCode.getText());
+            ps.setObject(7, txtPhone.getText());
+            ps.setObject(8, txtEMail.getText());
+            ps.setObject(9, txtSupId.getText());
+
+            ps.executeUpdate();
+            loadSupplierDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    void btnDelete(ActionEvent event) {
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
+
+            PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM suppliers WHERE supplierId=?"
+            );
+            ps.setObject(1, txtSupId.getText());
+            ps.executeUpdate();
+
+            loadSupplierDetails();
+            clearFields();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    void btnCustomerManage(ActionEvent event) {}
+    @FXML
+    void btnEmployeeManage(ActionEvent event) {}
+    @FXML
+    void btnItemManage(ActionEvent event) {}
 
 
-    @Override @FXML
+
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         col_supplier_id.setCellValueFactory(new PropertyValueFactory<>("supplierId"));
         col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -147,35 +127,68 @@ public class SupplierInfoControl implements Initializable {
         col_phone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        tblSupplier.setItems(supplierInfoArray);
+        txtProvince.getItems().addAll(
+                "Central", "Eastern", "Northern", "North Central", "North Western",
+                "Sabaragamuwa", "Southern", "Uva", "Western"
+        );
+        txtProvince.setValue("Western");
 
-        tblSupplier.getSelectionModel().selectedItemProperty().addListener((observableValue, supplierInfoDto, t1) -> {
-            if (t1!=null){
-                txtSupId.setText(t1.getSupplierId());
-                txtName.setText(t1.getName());
-                txtCompanyName.setText(t1.getCompanyName());
-                txtAddress.setText(t1.getAddress());
-                txtCity.setText(t1.getCity());
-                txtProvince.setValue(t1.getProvince());
-                txtPostalCode.setText(t1.getPostalCode());
-                txtPhone.setText(t1.getPhone());
-                txtEMail.setText(t1.getEmail());
+        loadSupplierDetails();
+
+        tblSupplier.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                txtSupId.setText(newVal.getSupplierId());
+                txtName.setText(newVal.getName());
+                txtCompanyName.setText(newVal.getCompanyName());
+                txtAddress.setText(newVal.getAddress());
+                txtCity.setText(newVal.getCity());
+                txtProvince.setValue(newVal.getProvince());
+                txtPostalCode.setText(newVal.getPostalCode());
+                txtPhone.setText(newVal.getPhone());
+                txtEMail.setText(newVal.getEmail());
             }
         });
+    }
 
-        txtProvince.getItems().addAll(
-                "Central",
-                "Eastern",
-                "Northern",
-                "North Central",
-                "North Western",
-                "Sabaragamuwa",
-                "Southern",
-                "Uva",
-                "Western"
-        );
 
-        // default value
+
+    private void loadSupplierDetails() {
+        supplierInfoArray.clear();
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/thogakade_FX", "root", "1234")) {
+
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM suppliers");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                supplierInfoArray.add(new SupplierInfoDto(
+                        rs.getString("supplierId"),
+                        rs.getString("name"),
+                        rs.getString("companyName"),
+                        rs.getString("address"),
+                        rs.getString("city"),
+                        rs.getString("province"),
+                        rs.getString("postalCode"),
+                        rs.getString("phone"),
+                        rs.getString("email")
+                ));
+            }
+            tblSupplier.setItems(supplierInfoArray);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void clearFields() {
+        txtSupId.clear();
+        txtName.clear();
+        txtCompanyName.clear();
+        txtAddress.clear();
+        txtCity.clear();
         txtProvince.setValue("Western");
+        txtPostalCode.clear();
+        txtPhone.clear();
+        txtEMail.clear();
     }
 }
