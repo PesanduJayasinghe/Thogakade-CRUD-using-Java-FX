@@ -1,0 +1,22 @@
+package Model.DTO;
+
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class SupplierInfoDto {
+
+    private String supplierId;
+    private String name;
+    private String companyName;
+    private String address;
+    private String city;
+    private String province;
+    private String postalCode;
+    private String phone;
+    private String email;
+
+}
